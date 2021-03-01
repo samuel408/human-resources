@@ -1,33 +1,50 @@
 var inquirer = require('inquirer');
-  
-  // get the client
 const mysql = require('mysql2');
- 
-// create the connection to database
+const sqlite3 = require('sqlite3').verbose();
+const cTable = require('console.table');
+
 const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'Tortas408!',
-  database: 'test'
-});
- 
-// // simple query
-// connection.query(
-//   'SELECT * FROM `table` WHERE `name` = "Page" AND `age` > 45',
-//   function(err, results, fields) {
-//     console.log(results); // results contains rows returned by server
-//     console.log(fields); // fields contains extra meta data about results, if available
-//   }
-// );
- 
-// with placeholder
-connection.query(
-  'SELECT * FROM `table` WHERE `name` = ? AND `age` > ?',
-  ['Page', 45],
-  function(err, results) {
-    console.log(results);
+    host: 'localhost',
+    user: 'root',
+    password: 'Tortas408!',
+    database: 'db/employees.db'
+  });
+   
+  connection.query(
+      'SELECT * FROM `departments` ',
+      function(err, results, fields) {
+        // console.log(results); // results contains rows returned by server
+      //   console.log(fields); // fields contains extra meta data about results, if available
+      }
+    );
+      
+
+// Connect to database
+const db = new sqlite3.Database('./db/employees.db', err => {
+  if (err) {
+    return console.error(err.message);
   }
-);
+
+});
+
+//chose to view all departments 
+const viewDepartments = () =>{
+ 
+    db.serialize(function() {
+      
+        db.each("SELECT * FROM departments", function(err, row) {
+            console.table([
+                {
+                    Id: row.id,
+                    Department:  row.department
+                }
+            ]);
+        });
+      });
+      
+      db.close();
+
+};
 
 // start of program 
 const  start = () => {
@@ -35,8 +52,8 @@ const  start = () => {
 inquirer
   .prompt([
     {
-        type: 'checkbox',
-        name: 'license',
+        type: 'list',
+        name: 'refresh',
         message: 'Please choose an option!',
         choices: ['view all departments', 'view all roles','view all employees','add a department', 'add a role','add an employee','update an employee role']
   
@@ -45,7 +62,12 @@ inquirer
       },    
   ])
   .then(answers => {
-    // Use user feedback for... whatever!!
+    // calls differnt functions based on answer
+    if (answers.refresh == 'view all departments'){
+        viewDepartments()
+
+    }
+
   })
   .catch(error => {
     if(error.isTtyError) {
