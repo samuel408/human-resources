@@ -159,6 +159,54 @@ const addRole = () => {
 
 }; 
 
+const addEmployee = () => {
+
+    inquirer
+  .prompt([
+    {
+        type: 'input',
+        name: 'first',
+        message: 'Please enter the first name of the new employee.'
+      }, 
+       { 
+      type: 'input',
+      name: 'last',
+      message: 'Please enter the last name of the new employee.'
+    }, 
+    {
+    type: 'input',
+    name: 'role',
+    message: 'Please enter the role id'
+  },
+  {
+    type: 'input',
+    name: 'manager',
+    message: 'Please enter the manager id'
+  } 
+  ])
+  .then(answers => {
+    // calls differnt functions based on answer
+    var first = answers.first;
+    var last =  answers.last;
+    var role = answers.role;
+    var manager = answers.manager;
+
+    var stmt = db.prepare("INSERT INTO employee (first_name, last_name, role_id, manager_id) values (?,?,?,?)");
+        stmt.run(first,last,role,manager);
+    stmt.finalize();
+
+    console.log("Added " + first + " "+ last  + " to the system !")
+  })
+  .catch(error => {
+    if(error.isTtyError) {
+      // Prompt couldn't be rendered in the current environment
+    } else {
+      // Something else went wrong
+    }
+  });
+
+}; 
+
 // start of program 
 const  start = () => {
 
@@ -196,6 +244,9 @@ inquirer
         addRole()
     }
 
+    if (answers.refresh == 'add an employee'){
+        addEmployee()
+    }
   })
   .catch(error => {
     if(error.isTtyError) {
