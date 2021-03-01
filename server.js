@@ -88,6 +88,35 @@ const viewEmployees = () => {
     
 };
 
+const addDepartment = () => {
+
+    inquirer
+  .prompt([
+    {
+        type: 'input',
+        name: 'department',
+        message: 'Please enter new department'
+      },    
+  ])
+  .then(answers => {
+    // calls differnt functions based on answer
+    var department = answers.department;
+    var stmt = db.prepare("INSERT INTO departments (department) values (?)");
+        stmt.run(department);
+    stmt.finalize();
+
+    console.log("Added the " + department + " department!")
+  })
+  .catch(error => {
+    if(error.isTtyError) {
+      // Prompt couldn't be rendered in the current environment
+    } else {
+      // Something else went wrong
+    }
+  });
+
+}; 
+
 // start of program 
 const  start = () => {
 
@@ -115,6 +144,10 @@ inquirer
 
     if (answers.refresh == 'view all employees'){
         viewEmployees()
+    }
+
+    if (answers.refresh == 'add a department'){
+        addDepartment()
     }
 
   })
