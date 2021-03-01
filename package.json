@@ -1,0 +1,29 @@
+{
+  "name": "hr",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "migrate": "sqlite3 db/employees.db < db/schema.sql",
+    "seed": "sqlite3 db/employees.db < db/seeds.sql",
+    "db": "sqlite3 db/employees.db",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samuel408/human-resources.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samuel408/human-resources/issues"
+  },
+  "homepage": "https://github.com/samuel408/human-resources#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "express": "^4.17.1",
+    "inquirer": "^8.0.0",
+    "mysql2": "^2.2.5"
+  }
+}
