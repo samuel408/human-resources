@@ -117,6 +117,48 @@ const addDepartment = () => {
 
 }; 
 
+const addRole = () => {
+
+    inquirer
+  .prompt([
+    {
+        type: 'input',
+        name: 'role',
+        message: 'Please enter the new role!'
+      }, 
+       { 
+      type: 'input',
+      name: 'salary',
+      message: 'Please enter the salary for this role .'
+    }, 
+    {
+    type: 'input',
+    name: 'department',
+    message: 'Please enter the department id'
+  } 
+  ])
+  .then(answers => {
+    // calls differnt functions based on answer
+    var role = answers.role;
+    var salary =  answers.salary;
+    var department = answers.department;
+
+    var stmt = db.prepare("INSERT INTO titles (title, salary, department_id) values (?,?,?)");
+        stmt.run(role,salary,department);
+    stmt.finalize();
+
+    console.log("Added the " + role + " role !")
+  })
+  .catch(error => {
+    if(error.isTtyError) {
+      // Prompt couldn't be rendered in the current environment
+    } else {
+      // Something else went wrong
+    }
+  });
+
+}; 
+
 // start of program 
 const  start = () => {
 
@@ -148,6 +190,10 @@ inquirer
 
     if (answers.refresh == 'add a department'){
         addDepartment()
+    }
+
+    if (answers.refresh == 'add a role'){
+        addRole()
     }
 
   })
