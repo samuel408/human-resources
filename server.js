@@ -43,7 +43,28 @@ const viewDepartments = () =>{
       });
       
       db.close();
+      
+    };
+    
+    const viewRoles = () => {
 
+        db.serialize(function() {
+          
+            db.each("SELECT * FROM titles", function(err, row) {
+                console.table([
+                    {
+                        Id: row.id,
+                        role: row.title,
+                        salary: row.salary,
+                        department_id: row.department_id
+
+                    }
+                ]);
+            });
+          });
+          
+          db.close();
+        
 };
 
 // start of program 
@@ -65,7 +86,10 @@ inquirer
     // calls differnt functions based on answer
     if (answers.refresh == 'view all departments'){
         viewDepartments()
+    }
 
+    if (answers.refresh == 'view all roles'){
+        viewRoles()
     }
 
   })
