@@ -67,6 +67,27 @@ const viewDepartments = () =>{
         
 };
 
+const viewEmployees = () => {
+
+    db.serialize(function() {
+      
+        db.each("SELECT * FROM employee", function(err, row) {
+            console.table([
+                {
+                    Id: row.id,
+                    first_name: row.first_name,
+                    last_name: row.last_name,
+                    role_id: row.role_id,
+                    manager_id: row.manager_id
+                }
+            ]);
+        });
+      });
+      
+      db.close();
+    
+};
+
 // start of program 
 const  start = () => {
 
@@ -90,6 +111,10 @@ inquirer
 
     if (answers.refresh == 'view all roles'){
         viewRoles()
+    }
+
+    if (answers.refresh == 'view all employees'){
+        viewEmployees()
     }
 
   })
