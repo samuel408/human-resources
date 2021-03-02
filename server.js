@@ -77,8 +77,8 @@ const viewEmployees = () => {
                     Id: row.id,
                     first_name: row.first_name,
                     last_name: row.last_name,
-                    role_id: row.role_id,
-                    manager_id: row.manager_id
+                    title: row.role_id,
+                    manager: row.manager_id
                 }
             ]);
         });
@@ -179,10 +179,12 @@ const addEmployee = () => {
     message: 'Please enter the role id'
   },
   {
-    type: 'input',
+    type: 'list',
     name: 'manager',
-    message: 'Please enter the manager id'
+    message: 'Please enter the manager assigned to the employee',
+    choices:['Joe Smith', 'Ted White', 'Jim Beam', 'Jack Beanstock']
   } 
+  
   ])
   .then(answers => {
     // calls differnt functions based on answer
@@ -207,6 +209,44 @@ const addEmployee = () => {
 
 }; 
 
+const updateRoll = () => {
+
+    inquirer
+    .prompt([
+      {
+          type: 'input',
+          name: 'id',
+          message: 'Please enter the id of the employee you want to update'
+        },
+        {
+            type: 'input',
+            name: 'role',
+            message: 'Please enter the updated role id'
+          }
+    ])
+    .then(answers => {
+      // calls differnt functions based on answer
+      
+      var role = answers.role;
+      var id =  answers.id;
+  
+     
+      var stmt = db.prepare("UPDATE employee SET role_id =?  WHERE Id=?");
+
+          stmt.run(role,id);
+      stmt.finalize();
+  
+      console.log("Added " + role  + " to the file with id # "+ id + "!")
+    })
+    .catch(error => {
+      if(error.isTtyError) {
+        // Prompt couldn't be rendered in the current environment
+      } else {
+        // Something else went wrong
+      }
+    });
+  
+};
 // start of program 
 const  start = () => {
 
@@ -246,6 +286,10 @@ inquirer
 
     if (answers.refresh == 'add an employee'){
         addEmployee()
+    }
+    
+    if (answers.refresh == 'update an employee role'){
+        updateRoll()
     }
   })
   .catch(error => {
