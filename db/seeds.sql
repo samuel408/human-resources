@@ -9,3 +9,4 @@ INSERT INTO employee (first_name, last_name, role_id,manager_id) values ('pablo'
 
 INSERT INTO employee (first_name, last_name, role_id,manager_id) values ('ted', 'daPlug', '2', '1');
 
+

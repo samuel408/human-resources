@@ -71,13 +71,14 @@ const viewEmployees = () => {
 
     db.serialize(function() {
       
-        db.each("SELECT * FROM employee", function(err, row) {
+        db.each("SELECT * FROM employee LEFT JOIN titles on employee.role_id = department_id ", function(err, row) {
             console.table([
                 {
                     Id: row.id,
                     first_name: row.first_name,
                     last_name: row.last_name,
-                    title: row.role_id,
+                    job_title: row.title,
+                    salary: row.salary,
                     manager: row.manager_id
                 }
             ]);
